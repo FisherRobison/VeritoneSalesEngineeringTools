@@ -4,12 +4,18 @@ You can use the [editor on GitHub](https://github.com/FisherRobison/VeritoneSale
 
 Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
 
-### Markdown
+# CMS Tools
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
-```markdown
-Syntax highlighted code block
+### Delete TDO
+```
+mutation deleteTDO{
+  deleteTDO(id:"ID"){
+    id
+    message
+  }
+}
+  ```
+  
 
 # Header 1
 ## Header 2
