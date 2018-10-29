@@ -30,3 +30,18 @@ query getLogs{
   }
 }
 ```
+
+
+### Create a TDO with asset
+```
+mutation{
+createTDOWithAsset(input:{
+  startDateTime:1521052518
+  stopDateTime:1521052518
+  uri:"https://www.popsci.com/sites/popsci.com/files/images/2017/08/depositphotos_3979974_original.jpg"
+}) {
+  id
+}
+    
+}
+```
