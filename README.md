@@ -15,7 +15,7 @@ mutation deleteTDO{
   }
 }
   ```
-### Get Logs of Tasks
+### Get Logs for Tasks
 ```
 query getLogs{
   temporalDataObject(id:"64953347"){
