@@ -6,15 +6,6 @@ If you would like to commit to this project please reach out to me on slack.
 
 # CMS Tools
 
-### Delete TDO
-```
-mutation deleteTDO{
-  deleteTDO(id:"ID"){
-    id
-    message
-  }
-}
-  ```
 ### Get Logs for Tasks
 ```
 query getLogs{
@@ -45,3 +36,38 @@ mutation {
 }
 
 ```
+### Run Engine Job on Existing TDO
+```
+mutation {
+  createJob(
+    input: {
+      targetId: "102014611", 
+      tasks: [
+        {
+          engineId: "8081cc99-c6c2-49b0-ab59-c5901a503508"
+        }, 
+        {
+          engineId: "insert-into-index"
+        }, 
+        {
+          engineId: "mention-generate"
+        }
+      ]
+    }
+  ) 
+  {
+    id
+  }
+}
+```
+
+### Delete TDO
+```
+mutation deleteTDO{
+  deleteTDO(id:"ID"){
+    id
+    message
+  }
+}
+  ```
+
