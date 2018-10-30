@@ -6,23 +6,6 @@ If you would like to commit to this project please reach out to me on slack.
 
 # CMS Tools
 
-### Get Logs for Tasks
-```
-query getLogs{
-  temporalDataObject(id:"64953347"){
-    tasks{
-      records{
-        log{
-          text
-          uri
-        }
-      }
-    }
-  }
-}
-```
-
-
 ### Create a TDO with asset
 ```
 mutation {
@@ -57,6 +40,22 @@ mutation {
   ) 
   {
     id
+  }
+}
+```
+
+### Get Logs for Tasks
+```
+query getLogs{
+  temporalDataObject(id:"64953347"){
+    tasks{
+      records{
+        log{
+          text
+          uri
+        }
+      }
+    }
   }
 }
 ```
