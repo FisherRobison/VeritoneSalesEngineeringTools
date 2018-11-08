@@ -19,29 +19,6 @@ mutation {
 }
 
 ```
-### Create a Real Time Job
-```
-mutation createJobOnCluster {
-  createJob(input: {
-    targetId: "88900861",
-    tasks: [{
-      engineId: "9e611ad7-2d3b-48f6-a51b-0a1ba40feab4",
-      payload: {
-        url: "https://s3.amazonaws.com/dev-chunk-cache-tmp/AC.mp4"
-      }
-    },
-    {
-      engineId: "38afb67a-045b-43db-96db-9080073695ab"
-    },
-    {
-      engineId: "f99d363b-d20a-4498-b3cc-840b79ee78d9"
-    }]
-  }) {
-    id
-  }
-}
-
-```
 
 ### Run Engine Job on Existing TDO
 ```
@@ -96,6 +73,29 @@ mutation deleteTDO{
 
 # Processing 
 
+### Create a Real Time Job
+
+```
+mutation createJobOnCluster {
+  createJob(input: {
+    targetId: "88900861",
+    tasks: [{
+      engineId: "9e611ad7-2d3b-48f6-a51b-0a1ba40feab4",
+      payload: {
+        url: "https://s3.amazonaws.com/dev-chunk-cache-tmp/AC.mp4"
+      }
+    },
+    {
+      engineId: "38afb67a-045b-43db-96db-9080073695ab"
+    },
+    {
+      engineId: "f99d363b-d20a-4498-b3cc-840b79ee78d9"
+    }]
+  }) {
+    id
+  }
+}
+```
 
 # Retrieval
 
