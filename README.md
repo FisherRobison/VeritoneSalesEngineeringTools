@@ -3,10 +3,12 @@ I will be updating these pages with useful Gifs, GraphQL commands, API Tips, and
 
 If you would like to commit to this project please reach out to me on slack.
 
-## Section Links:
-[Ingestion](#ingestion)
-
-[Processing](#processing)
+## Table of Contents:
+[Ingestion](#ingestion)<br>
+[Processing](#processing)<br>
+[Retrieval](#retrieval)<br>
+[Org Setup](#org-setup)<br>
+[Miscellaneous](#miscellaneous)
 
 ## Ingestion
 
@@ -75,7 +77,7 @@ mutation deleteTDO{
 }
   ```
 
-# Processing 
+## Processing 
 
 ### Create a Real Time Job
 
@@ -101,13 +103,13 @@ mutation createJobOnCluster {
 }
 ```
 
-# Retrieval
+## Retrieval
 
 
 
 
-# Org Setup
+## Org Setup
 
 
 
-# Misc
+## Miscellaneous
