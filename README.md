@@ -15,7 +15,7 @@ If you would like to commit to this project please reach out to me on Slack.
 
 ## Authentication:
 
-### Login as User and Get Session Token
+### Log In as User and Get Session Token
 ```
 mutation userLogin {
   userLogin(input: {userName: "jdoe@mycompany.com" password: "Password123"}) {
@@ -33,7 +33,7 @@ mutation validateToken {
 }
 ```
 
-### Logout User Session
+### Log Out User Session
 ```
 mutation userLogout {
   userLogout(token: "3c15e237-94a5-4563-9be7-4882acc7fa74")
