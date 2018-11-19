@@ -212,6 +212,26 @@ query getLogs {
 }
 ```
 
+### Cancel Job in Progress
+```
+mutation cancelJob {
+    cancelJob(id: "18114402_busvuCo21J") {
+      id
+      message
+    }
+  }
+```
+
+### Delete TDO
+```
+mutation deleteTDO {
+  deleteTDO(id: "64953347") {
+    id
+    message
+  }
+}
+```
+
 ## Retrieval:
 
 ### Get Engine Results in Veritone Standard Format
@@ -559,26 +579,6 @@ query getDuration {
         mediaLengthSec
       }
     }
-  }
-}
-```
-
-### Cancel Job in Progress
-```
-mutation cancelJob {
-    cancelJob(id: "18114402_busvuCo21J") {
-      id
-      message
-    }
-  }
-```
-
-### Delete TDO
-```
-mutation deleteTDO {
-  deleteTDO(id: "64953347") {
-    id
-    message
   }
 }
 ```
