@@ -125,7 +125,7 @@ mutation createJobOnCluster {
 
 ### Get Jobs for TDO
 ```
-query getJobsAndTasks {
+query getJobs {
   jobs(targetId: "102014611") {
     records {
       id
