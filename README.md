@@ -123,6 +123,37 @@ mutation createJobOnCluster {
 }
 ```
 
+### Run Library-Enabled Engine Job (e.g. Face Recognition)
+```
+# Note: "libraryEngineModelId" can be obtained by running the "Get Library Training Stats" query in the "Library" section.
+mutation runLibraryEngineJob {
+  createJob(input: {
+    targetId: "119586271"
+    tasks: [
+      {
+        engineId: "0744df88-6274-490e-b02f-107cae03d991"
+        payload: {
+          libraryId: "ef8c7263-6c7c-4b8f-9cb5-93784e3d89f5"
+          libraryEngineModelId: "5750ca7e-8c4a-4ca4-b9f9-df8617032bd4"
+        },
+      }
+      ]
+    }) {
+    id
+    targetId
+    tasks {
+      records {
+        id
+        engineId
+        order
+        payload
+        status
+      }
+    }
+  }
+}
+```
+
 ### Get Jobs for TDO
 ```
 query getJobs {
