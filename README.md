@@ -218,7 +218,7 @@ query jobStatus {
           id
           name
           category {
-            id
+            name
           }
         }
       }
