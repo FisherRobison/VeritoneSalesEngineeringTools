@@ -282,6 +282,17 @@ query getEngineOutput {
 }
 ```
 
+### Get Transcription and Speaker Separation Results in Veritone Standard Format
+```
+query vtn {
+  engineResults(tdoId: "107947027", engineIds: ["40356dac-ace5-46c7-aa02-35ef089ca9a4", "transcribe-speechmatics-container-en-us"]) {
+    records {
+      jsondata
+    }
+  }
+}
+```
+
 ### Get Engine Output by Job ID
 ```
 query getEngineOutputByJob {
