@@ -73,7 +73,7 @@ mutation createTDOWithAsset {
 
 ## Processing:
 
-### Run Engine Job on Existing TDO
+### Run Iron Engine Job on Existing TDO
 ```
 # Note: The last three "engineId" values are needed for the TDO to appear correctly in CMS.
 mutation runEngineJob {
@@ -102,10 +102,10 @@ mutation runEngineJob {
 }
 ```
 
-### Run Real-Time Engine Job on External File (using Web Stream Adapter) and Add Results to Existing TDO
+### Run Real-Time (RT) Engine Job on External File (using Web Stream Adapter) and Add Results to Existing TDO
 ```
 # Note: "url" must be public; change only the second "engineId" value.
-mutation createJobOnCluster {
+mutation runRTEngineJob {
   createJob(input: {
     targetId: "88900861",
     tasks: [{
