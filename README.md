@@ -187,12 +187,11 @@ query runningJobs {
     count
     records {
       id
-      name
+      targetId
       createdDateTime
       tasks {
         records {
           id
-          name
           payload
         }
       }
