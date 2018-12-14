@@ -589,10 +589,22 @@ mutation whitelistIngestionAdapters {
 
 ### Whitelist IDentify and Redact Engines
 ```
-mutation whitelistIDentifyRedactEngines{
+mutation whitelistIDentifyRedactEngines {
   addToEngineWhitelist(toAdd:{
     organizationId:    16750
     engineIds:["616f6d39-b338-4c28-b9f2-902242f93c71","34b859a1-998d-419f-8d61-47f9f1d10046","6465796c-e8fe-4df3-a083-d6c64fb2c043","8081cc99-c6c2-49b0-ab59-c5901a503508","66a83b19-f691-46b2-ba85-443fc74602ed","687c3fe5-38ef-4c9f-8ea0-960970d2cead","e5315e17-7418-490d-9048-c27376a3fe71","e924437d-e9c1-401c-bc3f-d0fccad945ff"]
+  }){
+    organizationId
+  }
+}
+```
+
+### Blacklist Deprecated Facebox Engines
+```
+mutation blacklistDeprecatedFaceboxEngines {
+  addToEngineBlacklist(toAdd:{
+    organizationId: 16750
+    engineIds:["bab908d5-1eb0-4b94-9b0c-5c4bb6a81d78","dcef5300-5cc1-4fe3-bd8f-5c4d3a09b281","3f115b93-97be-46f0-b0f2-7460db15ec34","fb61580f-0bf8-4040-823d-64bada691059"]
   }){
     organizationId
   }
