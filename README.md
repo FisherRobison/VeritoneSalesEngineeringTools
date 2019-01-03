@@ -544,6 +544,15 @@ query getTrainJobDetails {
 }
 ```
 
+### Check if Engine is Library-Trainable
+```
+query engineLibraryTrainable {
+  engine(id: "95d62ae8-edc2-4fb9-ad08-fe33646f0ece") {
+    libraryRequired
+  }
+}
+```
+
 ## Org Setup:
 
 ### Whitelist Engine
