@@ -8,6 +8,7 @@ If you would like to commit to this project please reach out to me on Slack.
 [Ingestion](#ingestion)<br>
 [Processing](#processing)<br>
 [Retrieval](#retrieval)<br>
+[Search](#search)
 [Folders](#folders)<br>
 [Library](#library)<br>
 [Org Setup](#org-setup)<br>
@@ -412,6 +413,10 @@ query checkExportStatus {
  }
 }
 ```
+
+## Search
+
+### Search by SDO
 
 ## Folders:
 
