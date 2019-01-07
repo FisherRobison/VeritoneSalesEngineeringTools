@@ -417,6 +417,26 @@ query checkExportStatus {
 ## Search
 
 ### Search by SDO
+```
+query searchSDO {
+    searchMedia(search: {
+        index: ["mine"],
+        limit: 20,
+        offset: 0,
+        query: {
+            conditions: [
+                { operator: "term", field: "QUANTITY", value: 2 }
+               	{ operator: "term", field: "ORD_ID", value: "12343" }
+            ],
+            operator: "or"
+        },
+        type: "schemaId"
+    })
+    {
+        jsondata
+    }
+}
+```
 
 ## Folders:
 
