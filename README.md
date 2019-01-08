@@ -124,6 +124,33 @@ mutation runRTEngineJob {
 }
 ```
 
+### Run Engine Job with Standby Task
+```
+mutation createTranscriptionJobWithStandby {
+    createJob(input: {
+        targetId: "53796349",
+        tasks: [
+            {
+                engineId: "transcribe-speechmatics-container-en-us",
+                standbyTask: {
+                    engineId: "transcribe-speechmatics-container-en-us",
+                    standbyTask: {
+                        engineId: "transcribe-voicebase",
+                        payload: { language: "en-US", priority: "low" }
+                    }
+                }
+            }]
+    }) {
+        id
+        tasks {
+            records {
+                id
+            }
+        }
+    }
+}
+```
+
 ### Run Library-Enabled Engine Job (e.g. Face Recognition)
 ```
 # Note: "libraryEngineModelId" can be obtained by running the "Get Library Training Stats" query in the "Library" section.
