@@ -292,6 +292,28 @@ mutation deleteTDO {
 
 ## Retrieval:
 
+### Get Assets for TDO
+```
+query getAssets {
+  temporalDataObject(id: "280670774") {
+    assets {
+      records {
+        sourceData {
+          engine {
+            id
+            name
+          }
+        }        
+        id
+        createdDateTime
+        assetType
+        signedUri
+      }
+    }
+  }
+}
+```
+
 ### Get Engine Results in Veritone Standard Format
 ```
 query getEngineOutput {
