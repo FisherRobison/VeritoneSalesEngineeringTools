@@ -105,7 +105,7 @@ mutation runEngineJob {
 
 ### Run Real-Time (RT) Engine Job on External File (using Web Stream Adapter) and Add Results to Existing TDO
 ```
-# Note: "url" must be public; change only the second "engineId" value.
+# Note: "url" must be public; change only the second "engineId" value.  The existing TDO must be empty (no assets).
 mutation runRTEngineJob {
   createJob(input: {
     targetId: "88900861",
