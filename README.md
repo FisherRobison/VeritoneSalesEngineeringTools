@@ -72,6 +72,23 @@ mutation createTDOWithAsset {
 }
 ```
 
+### Create Empty TDO (No Asset)
+```
+# Note: This can be used in conjunction with the "Download File and Run Engine" query in the "Processing" section.
+mutation createTDO {
+  createTDO(
+    input: {
+      startDateTime: 1548432520, 
+      stopDateTime: 1548436341
+    }
+  ) 
+  {
+    id
+    status
+  }
+}
+```
+
 ## Processing:
 
 ### Run Iron Engine Job on Existing TDO
@@ -150,18 +167,39 @@ mutation createTranscriptionJobWithStandby {
     }
 }
 ```
-### Run a job with Download File Task like CMS
+
+### Download File and Run Engine (Old CMS Upload)
 ```
-mutation createJob{
-  createJob(input:{
-    targetId:"330495884"
-    tasks:[{engineId: "download-file", payload: {tdoId:"330495884",startDateTime:1548195057,fileUri:"https://s3.amazonaws.com/hold4fisher/machineLearning.mp4"}},{engineId:"106634c5-8988-4693-b072-f97889c05fa4"}]
+# Note: This query follows the old CMS upload process by downloading a file as an asset to an existing TDO that is empty (see "Create Empty TDO (No Asset)" query in the "Ingestion" section) and then running one or more engines against that asset.  This works with all V1F (Iron) engines.
+mutation downloadFileAndRunEngine {
+  createJob(
+    input: {
+      targetId: "331178425"
+    	tasks: [{
+        engineId: "download-file",
+        payload: {
+          tdoId: "331178425",
+          startDateTime: 1548432520,
+          fileUri: "https://s3.amazonaws.com/hold4fisher/s3Test.mp4"
+        }},
+        {
+          engineId: "transcribe-speechmatics-container-en-us"
+        },        
+        {
+          engineId: "insert-into-index"
+        }, 
+        {
+          engineId: "thumbnail-generator"
+        },         
+        {
+          engineId: "mention-generate"
+        }        
+      ]
   }){
     id
   }
 }
 ```
-
 
 ### Run Library-Enabled Engine Job (e.g. Face Recognition)
 ```
@@ -269,9 +307,17 @@ query jobStatus {
 ### Get Logs for Tasks
 ```
 query getLogs {
-  temporalDataObject(id: "102014611") {
+  temporalDataObject(id: "331178425") {
     tasks {
-      records {
+      records {       
+        engine {
+          id
+          name
+        }    
+        id        
+        status        
+        startedDateTime
+        completedDateTime
         log {
           text
           uri
@@ -301,20 +347,6 @@ mutation deleteTDO {
   }
 }
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 ## Retrieval:
 
