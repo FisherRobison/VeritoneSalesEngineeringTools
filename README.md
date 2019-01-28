@@ -167,18 +167,6 @@ mutation createTranscriptionJobWithStandby {
     }
 }
 ```
-### Run a job with Download File Task like CMS
-```
-mutation createJob{
-  createJob(input:{
-    targetId:"330495884"
-    tasks:[{engineId: "download-file", payload: {tdoId:"330495884",startDateTime:1548195057,fileUri:"https://s3.amazonaws.com/hold4fisher/machineLearning.mp4"}},{engineId:"106634c5-8988-4693-b072-f97889c05fa4"}]
-  }){
-    id
-  }
-}
-```
-
 
 ### Download File and Run Engine (Old CMS Upload)
 ```
@@ -359,20 +347,6 @@ mutation deleteTDO {
   }
 }
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 ## Retrieval:
 
