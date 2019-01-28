@@ -12,7 +12,7 @@ If you would like to commit to this project please reach out to me on Slack.
 [Folders](#folders)<br>
 [Library](#library)<br>
 [Org Setup](#org-setup)<br>
-[Miscellaneous](#miscellaneous)
+[Miscellaneous](#miscellaneous)<br>
 [Real Time](#real-time)
 
 
