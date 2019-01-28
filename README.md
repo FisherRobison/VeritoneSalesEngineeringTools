@@ -13,6 +13,8 @@ If you would like to commit to this project please reach out to me on Slack.
 [Library](#library)<br>
 [Org Setup](#org-setup)<br>
 [Miscellaneous](#miscellaneous)
+[Real Time](#real-time)
+
 
 ## Authentication:
 
@@ -945,6 +947,32 @@ query primaryAsset {
 mutation setPrimaryAsset {
   updateTDO(input: {id: 117679345, primaryAsset: {id: "117679345_t6l92LBhp0", assetType: "media"}}) {
     id
+  }
+}
+```
+
+
+## Real Time:
+
+### Real Time Job Quick Start Guide
+```
+mutation CreateTDO {
+  createTDO(input: {startDateTime: 1548195057, stopDateTime: 1548195065}) {
+    id
+  }
+}
+
+mutation createJob {
+  createJob(input: {targetId: "330972585", tasks: [{engineId: "9e611ad7-2d3b-48f6-a51b-0a1ba40feab4", payload: {url: "https://s3.amazonaws.com/hold4fisher/IFC_BAVS_207_DAI.mp4"}}, {engineId: "dcef5300-5cc1-4fe3-bd8f-5c4d3a09b281", payload: {libraryId: "13e6f4a3-0d5c-4e11-9a30-913e981cb9ad", minimumConfidence: 75}}]}) {
+    id
+  }
+}
+
+query getEngineResults {
+  engineResults(tdoId: "330972585", engineIds: ["dcef5300-5cc1-4fe3-bd8f-5c4d3a09b281"]) {
+    records {
+      jsondata
+    }
   }
 }
 ```
