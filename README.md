@@ -956,21 +956,22 @@ mutation setPrimaryAsset {
 
 ### Real Time Job Quick Start Guide
 ```
+# Create a TDO or "Container" for step 2
 mutation CreateTDO {
   createTDO(input: {startDateTime: 1548195057, stopDateTime: 1548195065}) {
     id
   }
 }
-
+# Create a job with web stream adapter and amazon face detection
 mutation createJob {
-  createJob(input: {targetId: "330972585", tasks: [{engineId: "9e611ad7-2d3b-48f6-a51b-0a1ba40feab4", payload: {url: "https://s3.amazonaws.com/hold4fisher/IFC_BAVS_207_DAI.mp4"}}, {engineId: "e8ba2d5e-e4f2-4f57-84f3-da90cb9a0ddd"}]}) {
+  createJob(input: {targetId: "This should be ID from step 1 response", tasks: [{engineId: "9e611ad7-2d3b-48f6-a51b-0a1ba40feab4", payload: {url: "https://s3.amazonaws.com/hold4fisher/IFC_BAVS_207_DAI.mp4"}}, {engineId: "e8ba2d5e-e4f2-4f57-84f3-da90cb9a0ddd"}]}) {
     id
   }
 }
 
 
 query getEngineResults {
-  engineResults(tdoId: "330972585", engineIds: ["dcef5300-5cc1-4fe3-bd8f-5c4d3a09b281"]) {
+  engineResults(tdoId: "This should be same targetId used in step 2", engineIds: ["e8ba2d5e-e4f2-4f57-84f3-da90cb9a0ddd"]) {
     records {
       jsondata
     }
