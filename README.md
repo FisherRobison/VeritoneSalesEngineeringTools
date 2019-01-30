@@ -962,13 +962,17 @@ mutation CreateTDO {
     id
   }
 }
-# Create a job with web stream adapter and amazon face detection
+# Create a Job with amazon face rekognition celebrity
 mutation createJob {
-  createJob(input: {targetId: "This should be ID from step 1 response", tasks: [{engineId: "9e611ad7-2d3b-48f6-a51b-0a1ba40feab4", payload: {url: "https://s3.amazonaws.com/hold4fisher/IFC_BAVS_207_DAI.mp4"}}, {engineId: "e8ba2d5e-e4f2-4f57-84f3-da90cb9a0ddd"}]}) {
+  createJob(input: {
+    targetId: "This should be ID from step 1 response", 
+    isReprocessJob:true
+    tasks: [
+      {engineId: "5e651457-e102-4d16-a8f2-5c0c34f58851"}]}) {
     id
+    status
   }
 }
-
 # Get the results from engine in step 2
 query getEngineResults {
   engineResults(tdoId: "This should be same targetId used in step 2", engineIds: ["e8ba2d5e-e4f2-4f57-84f3-da90cb9a0ddd"]) {
