@@ -963,10 +963,11 @@ mutation CreateTDO {
 }
 
 mutation createJob {
-  createJob(input: {targetId: "330972585", tasks: [{engineId: "9e611ad7-2d3b-48f6-a51b-0a1ba40feab4", payload: {url: "https://s3.amazonaws.com/hold4fisher/IFC_BAVS_207_DAI.mp4"}}, {engineId: "dcef5300-5cc1-4fe3-bd8f-5c4d3a09b281", payload: {libraryId: "13e6f4a3-0d5c-4e11-9a30-913e981cb9ad", minimumConfidence: 75}}]}) {
+  createJob(input: {targetId: "330972585", tasks: [{engineId: "9e611ad7-2d3b-48f6-a51b-0a1ba40feab4", payload: {url: "https://s3.amazonaws.com/hold4fisher/IFC_BAVS_207_DAI.mp4"}}, {engineId: "e8ba2d5e-e4f2-4f57-84f3-da90cb9a0ddd"}]}) {
     id
   }
 }
+
 
 query getEngineResults {
   engineResults(tdoId: "330972585", engineIds: ["dcef5300-5cc1-4fe3-bd8f-5c4d3a09b281"]) {
