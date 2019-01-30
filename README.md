@@ -957,11 +957,22 @@ mutation setPrimaryAsset {
 ### Real Time Job Quick Start Guide
 ```
 # Create a TDO or "Container" for step 2
-mutation CreateTDO {
-  createTDO(input: {startDateTime: 1548195057, stopDateTime: 1548195065}) {
+mutation createTDOWithAsset {
+  createTDOWithAsset(input: {startDateTime: 1548880932, updateStopDateTimeFromAsset: true, contentType: "video/mp4", assetType: "media", addToIndex: true, uri: "https://s3.amazonaws.com/hold4fisher/Manchester+United+4-3+Real+Madrid+-+UEFA+CL+2002_2003+%5BHD%5D-W7HM1RfNfS4.mp4"}) {
     id
+    status
+    assets {
+      records {
+        id
+        type
+        contentType
+        signedUri
+      }
+    }
   }
 }
+
+
 # Create a Job with amazon face rekognition celebrity
 mutation createJob {
   createJob(input: {
