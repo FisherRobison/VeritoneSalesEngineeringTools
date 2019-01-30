@@ -760,7 +760,7 @@ mutation whitelistIngestionAdapters {
 mutation whitelistIDentifyRedactEngines {
   addToEngineWhitelist(toAdd:{
     organizationId:    16750
-    engineIds:["616f6d39-b338-4c28-b9f2-902242f93c71","34b859a1-998d-419f-8d61-47f9f1d10046","6465796c-e8fe-4df3-a083-d6c64fb2c043","8081cc99-c6c2-49b0-ab59-c5901a503508","66a83b19-f691-46b2-ba85-443fc74602ed","687c3fe5-38ef-4c9f-8ea0-960970d2cead","e5315e17-7418-490d-9048-c27376a3fe71","e924437d-e9c1-401c-bc3f-d0fccad945ff"]
+    engineIds:["616f6d39-b338-4c28-b9f2-902242f93c71","34b859a1-998d-419f-8d61-47f9f1d10046","6465796c-e8fe-4df3-a083-d6c64fb2c043","8081cc99-c6c2-49b0-ab59-c5901a503508","66a83b19-f691-46b2-ba85-443fc74602ed","687c3fe5-38ef-4c9f-8ea0-960970d2cead","e5315e17-7418-490d-9048-c27376a3fe71","e924437d-e9c1-401c-bc3f-d0fccad945ff","b9eca145-3bd6-4e62-83e3-82dbc5858af1"]
   }){
     organizationId
   }
