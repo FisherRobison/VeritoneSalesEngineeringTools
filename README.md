@@ -969,7 +969,7 @@ mutation createJob {
   }
 }
 
-
+# Get the results from engine in step 2
 query getEngineResults {
   engineResults(tdoId: "This should be same targetId used in step 2", engineIds: ["e8ba2d5e-e4f2-4f57-84f3-da90cb9a0ddd"]) {
     records {
