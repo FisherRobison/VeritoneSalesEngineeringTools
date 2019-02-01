@@ -234,6 +234,25 @@ mutation runLibraryEngineJob {
 }
 ```
 
+### Reprocess Face Detection in Redact
+```
+mutation reprocessFaceDetection {
+   createJob(input : {
+     targetId: "331580431"
+     tasks:[{
+       engineId: "b9eca145-3bd6-4e62-83e3-82dbc5858af1",
+       payload: {
+         recordingId: "331580431"
+         confidenceThreshold: 0.7
+         videoType: "Bodycam"
+       }
+     }]
+   }){
+     id
+   }
+}
+```
+
 ### Get Jobs for TDO
 ```
 query getJobs {
