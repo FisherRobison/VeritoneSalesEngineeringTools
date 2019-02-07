@@ -930,6 +930,25 @@ query listCategoryEngines {
 }
 ```
 
+### List Engine's Custom Fields
+```
+query engineCustomFields {
+  engine(id: "b396fa74-83ff-4052-88a7-c37808a25673") {
+    id
+    fields {
+      type
+      name
+      defaultValue
+      info
+      options {
+        key
+        value
+      }
+    }
+  }
+}
+```
+
 ### Fix Video Playback Issue in CMS
 ```
 # List all TDOs and identify which ones have a bad primary asset based on "signedUri" field
