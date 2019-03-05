@@ -256,22 +256,28 @@ mutation reprocessFaceDetection {
 ### Get Jobs for TDO
 ```
 query getJobs {
-  jobs(targetId: "102014611") {
+  jobs(targetId: "390287267") {
     records {
       id
       createdDateTime
       status
       tasks {        
-        records {       
+        records {          
           id
           status
+          startedDateTime
+          completedDateTime  
           engine {
             id
             name
             category {
               name
             }
-          }             
+          }           
+          payload
+          log {
+            uri
+          }
         }
       }
     }
@@ -374,7 +380,11 @@ mutation deleteTDO {
 ### Get Assets for TDO
 ```
 query getAssets {
-  temporalDataObject(id: "280670774") {
+  temporalDataObject(id: "390287267") {
+    primaryAsset(assetType: "media") {
+      id
+      signedUri
+    }
     assets {
       records {
         sourceData {
