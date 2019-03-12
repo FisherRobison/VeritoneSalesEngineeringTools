@@ -91,6 +91,39 @@ mutation createTDO {
 }
 ```
 
+### Run Ingestion Job "On Demand" (Specify Start and Stop Time)
+```
+# Note: You must first create an ingestion job in "On Demand" scheduling mode, and pass that ID into the query.
+mutation runIngestionJobStartStopTime {
+  launchScheduledJobs(input: {
+    scheduledJobId: "46384"
+    payload: {
+        recordStartTime: "2019-03-11T23:30:00Z"
+        recordEndTime: "2019-03-11T23:45:00Z"
+    }
+  }) {
+    id
+    targetId
+  }
+}
+```
+
+### Run Ingestion Job "On Demand" (Specify Duration of Recording)
+```
+# Note: You must first create an ingestion job in "On Demand" scheduling mode, and pass that ID into the query.
+mutation runIngestionJobDuration {
+  launchScheduledJobs(input: {
+    scheduledJobId: "46384"
+    payload: {
+        recordDuration: "15m"
+    }
+  }) {
+    id
+    targetId
+  }
+}
+```
+
 ## Processing:
 
 ### Run Iron Engine Job on Existing TDO
