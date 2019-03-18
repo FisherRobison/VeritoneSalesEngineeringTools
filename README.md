@@ -45,56 +45,6 @@ mutation userLogout {
 
 ## Ingestion:
 
-
-### Create Textraction Job with Translation 
-
-```
-
-mutation newTDO {
-  createTDOWithAsset(input:{  
-    assetType: "media"  
-    contentType: "text/plain"
-    startDateTime: 1548356446
-    stopDateTime:1548356447
-  uri: "https://s3-veritone-voatest-or-1.s3-us-west-2.amazonaws.com/MRT_TRANSCRIPT.txt?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIND47I4UD76OM7XQ/20190318/us-west-2/s3/aws4_request&X-Amz-Date=20190318T151421Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=10f79e998f6194e35fa3c65d086a8a48737922db1ac9750808711e7e0af381ab"}) 
-  {
-    id
-  }
-}
-
-#Text Extraction - COMPLETED SUCCESSFULLY
-mutation createJob {
-  createJob(input: {
-    targetId: "410318594",
-    isReprocessJob:true
-    tasks: [{
-        engineId: "b02da568-2952-4b87-91a5-abc019c31ffa",
-      payload: {
-      }
-    }]
-  }) {
-    id
-  }
-}
-
-#Amazon Translate USEAST V2F
-mutation createJob{
-  createJob(input:{
-    targetId:410318594
-    isReprocessJob:true
-    tasks:{
-      engineId:"c06ac5eb-3754-4055-b9fb-047b72660a0a",
-     payload: {
-              target: "ru",
-            }
-    
-    }
-  }){
-    id
-  }
-}
-```
-
 ### Create TDO and Upload Asset
 ```
 # Note: "uri" must be a public URL.
@@ -175,6 +125,55 @@ mutation runIngestionJobDuration {
 ```
 
 ## Processing:
+
+### Create Textraction Job with Translation 
+
+```
+
+mutation newTDO {
+  createTDOWithAsset(input:{  
+    assetType: "media"  
+    contentType: "text/plain"
+    startDateTime: 1548356446
+    stopDateTime:1548356447
+  uri: "https://s3-veritone-voatest-or-1.s3-us-west-2.amazonaws.com/MRT_TRANSCRIPT.txt?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIND47I4UD76OM7XQ/20190318/us-west-2/s3/aws4_request&X-Amz-Date=20190318T151421Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=10f79e998f6194e35fa3c65d086a8a48737922db1ac9750808711e7e0af381ab"}) 
+  {
+    id
+  }
+}
+
+#Text Extraction - COMPLETED SUCCESSFULLY
+mutation createJob {
+  createJob(input: {
+    targetId: "410318594",
+    isReprocessJob:true
+    tasks: [{
+        engineId: "b02da568-2952-4b87-91a5-abc019c31ffa",
+      payload: {
+      }
+    }]
+  }) {
+    id
+  }
+}
+
+#Amazon Translate USEAST V2F
+mutation createJob{
+  createJob(input:{
+    targetId:410318594
+    isReprocessJob:true
+    tasks:{
+      engineId:"c06ac5eb-3754-4055-b9fb-047b72660a0a",
+     payload: {
+              target: "ru",
+            }
+    
+    }
+  }){
+    id
+  }
+}
+```
 
 ### Run Iron Engine Job on Existing TDO
 ```
