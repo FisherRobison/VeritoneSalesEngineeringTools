@@ -1093,6 +1093,41 @@ mutation setPrimaryAsset {
 }
 ```
 
+### Set Parent/Child Relationship on Engine Tasks in Ingestion Job
+```
+# First, create an ingestion job in CMS with only the parent engine selected for processing; then run the following query to obtain the "jobTemplateId" for the ingestion job and "parentTaskId" for the parent engine.
+query scheduledJob {
+  scheduledJob(id: "50077") {
+    jobTemplates {
+      records {
+        id
+        taskTemplates {
+          records {
+            id
+            engine {
+              id
+              name
+            }
+            parentTaskId
+            childTaskIds
+          }
+        }
+      }
+    }
+  }
+}
+
+# Then pass in the "jobTemplateId", "parentTaskId", and desired "engineId" into the following query to add the child engine as a task in the template.
+mutation createChildTask {
+	createTaskTemplate(input: {
+		engineId: "6fa160ef-9d3d-4c87-b955-eefaed611224"
+		parentTaskId: "19041402_JHSjcn8CMfd0rnb"
+		jobTemplateId: "19041402_JHSjcn8CMf"
+	}) {
+		id
+	}
+}
+```
 
 ## Real Time:
 
