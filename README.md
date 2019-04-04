@@ -1170,3 +1170,125 @@ query getEngineResults {
   }
 }
 ```
+
+### Real Time VTT Export Request with Speaker Seperation 
+
+```
+mutation createTDOWithAsset {
+  createTDOWithAsset(input: {
+    startDateTime: 1554415828, 
+    updateStopDateTimeFromAsset: true, 
+    contentType: "video/mp4",
+    assetType: "media", 
+    uri: "https://s3.amazonaws.com/hold4fisher/Community+La+Biblioteca+Spanish+Rap+HD-j25tkxg5Vws.mp4"
+  
+  }) {
+    id
+    status
+    assets {
+      records {
+        id
+        type
+        contentType
+        signedUri
+      }
+    }
+  }
+}
+
+
+# # Create a Job with:
+# Speechmatics - Spanish - V2F: 
+# 71ab1ba9-e0b8-4215-b4f9-0fc1a1d2b44d
+
+# Veritone Speaker Separation Engine:
+# 35622f4d-cff0-4016-b63f-9d86ed60b707
+
+mutation runEngineJob {
+  createJob(
+    input: {
+      targetId: "431011721",
+      isReprocessJob:true <--Neccessary since we used createTDOWithAsset
+      tasks: [
+        {
+          engineId: "71ab1ba9-e0b8-4215-b4f9-0fc1a1d2b44d"
+        },
+        {
+          engineId: "35622f4d-cff0-4016-b63f-9d86ed60b707"
+        }
+      ]
+    }
+  )
+  {
+    id
+  }
+}
+
+# Poll for Job Status
+query pollStatus{
+  job(id: "${jobId}") {
+    id
+    status
+    tasks {
+      records {
+        id
+        status
+        output
+        target {
+          id
+        }
+      }
+    }
+    target {
+      id
+    }
+  }
+}
+
+# Once transcription Job is complete, Create Export Request
+mutation createExportRequest {
+  createExportRequest(input: {
+    includeMedia: false, 
+    tdoData: [{tdoId: "431011721"}
+    ], 
+    outputConfigurations: [
+      {  
+            engineId:"35622f4d-cff0-4016-b63f-9d86ed60b707",
+            formats:[  
+
+            ]
+         },
+      {
+      engineId: "71ab1ba9-e0b8-4215-b4f9-0fc1a1d2b44d"
+        formats: [
+          {extension: "vtt", 
+            options: {
+              newLineOnPunctuation: false
+            
+            
+            }}
+        
+        ]
+      }]}) {
+    id
+    status
+    organizationId
+    createdDateTime
+    modifiedDateTime
+    requestorId
+    assetUri
+  }
+}
+
+
+
+# Poll for Export 
+query exportRequest{
+			exportRequest(id: "2f61997d-26c2-48c2-a2dc-f34fa93eecb7") {
+				status
+				assetUri
+				requestorId
+			}
+		}
+    
+```
