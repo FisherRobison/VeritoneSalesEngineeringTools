@@ -1119,13 +1119,31 @@ query scheduledJob {
 
 # Then pass in the "jobTemplateId", "parentTaskId", and desired "engineId" into the following query to add the child engine as a task in the template.
 mutation createChildTask {
-	createTaskTemplate(input: {
-		engineId: "6fa160ef-9d3d-4c87-b955-eefaed611224"
-		parentTaskId: "19041402_JHSjcn8CMfd0rnb"
-		jobTemplateId: "19041402_JHSjcn8CMf"
-	}) {
-		id
-	}
+    createTaskTemplate(input: {
+        engineId: "6fa160ef-9d3d-4c87-b955-eefaed611224"
+        parentTaskId: "19041511_os0BKBZVwbWGgaY"
+        jobTemplateId: "19041511_os0BKBZVwb"
+        payload: {
+            definitionId: "516771a5-ce8d-47e0-a0e4-478b1ecbbec9"
+        }
+    }) {
+        id
+    }
+}
+```
+
+### List Engine Builds
+```
+query engineBuilds {
+  engine(id: "6fa160ef-9d3d-4c87-b955-eefaed611224") {
+    builds {
+      records {
+        id
+        name
+        status
+      }
+    }
+  }
 }
 ```
 
