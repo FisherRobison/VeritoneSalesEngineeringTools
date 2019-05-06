@@ -9,11 +9,12 @@
 After working with numerous customers on creating cognitive engines, it dawned on me that Flow is the perfect tool to wrap up these engines. As you will see in this walk through cognitive engines contain a large amount of repeat code. 
 
 
-The end goal of this engine is to categorize our transcription according to the IAB standard.
+The end goal of this engine is to categorize our transcription according to the [IAB standard](https://www.iab.com/guidelines/iab-quality-assurance-guidelines-qag-taxonomy)
+
 
 First we will drag in a v2f in node, this will allow you to consume messages from the Veritone queue and get the values needed in the rest of our flow such as tdoid (Temporal Data Object Id or sometimes referred to as recording Id). 
 
-<img width="200" alt="portfolio_view" src="https://s3.amazonaws.com/hold4fisher/developer.gif">
+<img width="800" alt="portfolio_view" src="https://s3.amazonaws.com/hold4fisher/public-v2f-in.gif">
 
 
 
