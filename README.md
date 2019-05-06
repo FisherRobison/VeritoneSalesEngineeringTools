@@ -3,6 +3,10 @@ I will be updating these pages with useful GraphQL commands, API tips, and gener
 
 If you would like to commit to this project please reach out to me on Slack.
 
+## If you came here for guides check out our Tutorials Section
+[All Tutorials](./tutorials.html).
+
+
 ## Table of Contents:
 [Authentication](#authentication)<br>
 [Ingestion](#ingestion)<br>
