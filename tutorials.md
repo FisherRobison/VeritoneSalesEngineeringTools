@@ -1,10 +1,4 @@
 
----
-layout: default
-title: Tutorials
-description: Workflow and Veritone API Tutorials
----
-
 ## Table of Contents:
 [WorkFlow](#workFlow)<br>
 
@@ -15,17 +9,27 @@ description: Workflow and Veritone API Tutorials
 After working with numerous customers on creating cognitive engines, it dawned on me that Flow is the perfect tool to wrap up these engines. As you will see in this walk through cognitive engines contain a large amount of repeat code. 
 
 
-The end goal of this engine is to classify our transcription according to the IAB standard.
+The end goal of this engine is to categorize our transcription according to the IAB standard.
 
-First we will drag in a v2f in node, this will allow you to consume messages from the veritone queue and get the values needed in the rest of our flow such as TDOID (Temporal Data Object Id or sometimes referred to as recording Id). 
+First we will drag in a v2f in node, this will allow you to consume messages from the Veritone queue and get the values needed in the rest of our flow such as tdoid (Temporal Data Object Id or sometimes referred to as recording Id). 
+
+<img width="200" alt="portfolio_view" src="https://s3.amazonaws.com/hold4fisher/developer.gif">
+
+
 
 
 
 Next we will extract the following values from the event, TdoID, TaskID, JobID we will set these to flow level variables. 
 
-Next we will drag in the API Node, inside this node we will paste the following graphQL query which will make a query for the transcription asset with the following code. Note category Id is the transcription category and tdoId will come from variables set in step 2.
 
-```json
+
+
+
+
+
+Next we will drag in the API Node, inside this node we will paste the following graphQL query which will make a query for the transcription asset with the following code. Note category Id is the transcription category and tdoId will come from variables set in step 2
+
+```js
 query engineResults{
 engineResults(engineCategoryIds:["67cd4dd0-2f75-445d-a6f0-2f297d6cd182"],tdoId:"412720139"){
      sourceId
@@ -38,7 +42,7 @@ engineResults(engineCategoryIds:["67cd4dd0-2f75-445d-a6f0-2f297d6cd182"],tdoId:"
 }
 ```
 
-Next we will drag in a function node to concatenate the entire json response from transcription into a complete paragraph. See transformSentenceToParagraph() function execution where we pass in the transcription series from the api node. I also use a helper function getAllSentenceEnd() to find sentence ends. 
+Next we will drag in a function node to concatenate the entire json response from transcription into a complete paragraph. See `transformSentenceToParagraph()` function execution where we pass in the transcription series from the api node. I also use a helper function `getAllSentenceEnd()` to find sentence ends. 
 ```js
 const getAllSentenceEnd = async (arr) => {
    let indexes = [], i;
