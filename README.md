@@ -91,7 +91,89 @@ mutation createTDO {
 }
 ```
 
+### Run Ingestion Job "On Demand" (Specify Start and Stop Time)
+```
+# Note: You must first create an ingestion job in "On Demand" scheduling mode, and pass that ID into the query.
+mutation runIngestionJobStartStopTime {
+  launchScheduledJobs(input: {
+    scheduledJobId: "46384"
+    payload: {
+        recordStartTime: "2019-03-11T23:30:00Z"
+        recordEndTime: "2019-03-11T23:45:00Z"
+    }
+  }) {
+    id
+    targetId
+  }
+}
+```
+
+### Run Ingestion Job "On Demand" (Specify Duration of Recording)
+```
+# Note: You must first create an ingestion job in "On Demand" scheduling mode, and pass that ID into the query.
+mutation runIngestionJobDuration {
+  launchScheduledJobs(input: {
+    scheduledJobId: "46384"
+    payload: {
+        recordDuration: "15m"
+    }
+  }) {
+    id
+    targetId
+  }
+}
+```
+
 ## Processing:
+
+### Create Textraction Job with Translation 
+
+```
+
+mutation newTDO {
+  createTDOWithAsset(input:{  
+    assetType: "media"  
+    contentType: "text/plain"
+    startDateTime: 1548356446
+    stopDateTime:1548356447
+  uri: "https://s3-veritone-voatest-or-1.s3-us-west-2.amazonaws.com/MRT_TRANSCRIPT.txt?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIND47I4UD76OM7XQ/20190318/us-west-2/s3/aws4_request&X-Amz-Date=20190318T151421Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=10f79e998f6194e35fa3c65d086a8a48737922db1ac9750808711e7e0af381ab"}) 
+  {
+    id
+  }
+}
+
+#Text Extraction - COMPLETED SUCCESSFULLY
+mutation createJob {
+  createJob(input: {
+    targetId: "410318594",
+    isReprocessJob:true
+    tasks: [{
+        engineId: "b02da568-2952-4b87-91a5-abc019c31ffa",
+      payload: {
+      }
+    }]
+  }) {
+    id
+  }
+}
+
+#Amazon Translate USEAST V2F
+mutation createJob{
+  createJob(input:{
+    targetId:410318594
+    isReprocessJob:true
+    tasks:{
+      engineId:"c06ac5eb-3754-4055-b9fb-047b72660a0a",
+     payload: {
+              target: "ru",
+            }
+    
+    }
+  }){
+    id
+  }
+}
+```
 
 ### Run Iron Engine Job on Existing TDO
 ```
@@ -234,25 +316,50 @@ mutation runLibraryEngineJob {
 }
 ```
 
+### Reprocess Face Detection in Redact
+```
+mutation reprocessFaceDetection {
+   createJob(input : {
+     targetId: "331580431"
+     tasks:[{
+       engineId: "b9eca145-3bd6-4e62-83e3-82dbc5858af1",
+       payload: {
+         recordingId: "331580431"
+         confidenceThreshold: 0.7
+         videoType: "Bodycam"
+       }
+     }]
+   }){
+     id
+   }
+}
+```
+
 ### Get Jobs for TDO
 ```
 query getJobs {
-  jobs(targetId: "102014611") {
+  jobs(targetId: "390287267") {
     records {
       id
       createdDateTime
       status
       tasks {        
-        records {       
+        records {          
           id
           status
+          startedDateTime
+          completedDateTime  
           engine {
             id
             name
             category {
               name
             }
-          }             
+          }           
+          payload
+          log {
+            uri
+          }
         }
       }
     }
@@ -355,7 +462,11 @@ mutation deleteTDO {
 ### Get Assets for TDO
 ```
 query getAssets {
-  temporalDataObject(id: "280670774") {
+  temporalDataObject(id: "390287267") {
+    primaryAsset(assetType: "media") {
+      id
+      signedUri
+    }
     assets {
       records {
         sourceData {
@@ -755,12 +866,24 @@ mutation whitelistIngestionAdapters {
 }
 ```
 
-### Whitelist IDentify and Redact Engines
+### Whitelist IDentify Engines
 ```
-mutation whitelistIDentifyRedactEngines {
+mutation whitelistIDentifyEngines {
   addToEngineWhitelist(toAdd:{
     organizationId:    16750
-    engineIds:["616f6d39-b338-4c28-b9f2-902242f93c71","34b859a1-998d-419f-8d61-47f9f1d10046","6465796c-e8fe-4df3-a083-d6c64fb2c043","8081cc99-c6c2-49b0-ab59-c5901a503508","66a83b19-f691-46b2-ba85-443fc74602ed","687c3fe5-38ef-4c9f-8ea0-960970d2cead","e5315e17-7418-490d-9048-c27376a3fe71","e924437d-e9c1-401c-bc3f-d0fccad945ff","b9eca145-3bd6-4e62-83e3-82dbc5858af1"]
+    engineIds:["616f6d39-b338-4c28-b9f2-902242f93c71"]
+  }){
+    organizationId
+  }
+}
+```
+
+### Whitelist Redact Engines
+```
+mutation whitelistRedactEngines {
+  addToEngineWhitelist(toAdd:{
+    organizationId:    16750
+    engineIds:["e924437d-e9c1-401c-bc3f-d0fccad945ff","66a83b19-f691-46b2-ba85-443fc74602ed","6465796c-e8fe-4df3-a083-d6c64fb2c043","b9eca145-3bd6-4e62-83e3-82dbc5858af1","3f03e804-cab6-413f-805c-ec36b6e33f5b"]
   }){
     organizationId
   }
@@ -911,6 +1034,25 @@ query listCategoryEngines {
 }
 ```
 
+### List Engine's Custom Fields
+```
+query engineCustomFields {
+  engine(id: "b396fa74-83ff-4052-88a7-c37808a25673") {
+    id
+    fields {
+      type
+      name
+      defaultValue
+      info
+      options {
+        key
+        value
+      }
+    }
+  }
+}
+```
+
 ### Fix Video Playback Issue in CMS
 ```
 # List all TDOs and identify which ones have a bad primary asset based on "signedUri" field
@@ -951,6 +1093,41 @@ mutation setPrimaryAsset {
 }
 ```
 
+### Set Parent/Child Relationship on Engine Tasks in Ingestion Job
+```
+# First, create an ingestion job in CMS with only the parent engine selected for processing; then run the following query to obtain the "jobTemplateId" for the ingestion job and "parentTaskId" for the parent engine.
+query scheduledJob {
+  scheduledJob(id: "50077") {
+    jobTemplates {
+      records {
+        id
+        taskTemplates {
+          records {
+            id
+            engine {
+              id
+              name
+            }
+            parentTaskId
+            childTaskIds
+          }
+        }
+      }
+    }
+  }
+}
+
+# Then pass in the "jobTemplateId", "parentTaskId", and desired "engineId" into the following query to add the child engine as a task in the template.
+mutation createChildTask {
+	createTaskTemplate(input: {
+		engineId: "6fa160ef-9d3d-4c87-b955-eefaed611224"
+		parentTaskId: "19041402_JHSjcn8CMfd0rnb"
+		jobTemplateId: "19041402_JHSjcn8CMf"
+	}) {
+		id
+	}
+}
+```
 
 ## Real Time:
 
@@ -992,4 +1169,126 @@ query getEngineResults {
     }
   }
 }
+```
+
+### Real Time VTT Export Request with Speaker Seperation 
+
+```
+mutation createTDOWithAsset {
+  createTDOWithAsset(input: {
+    startDateTime: 1554415828, 
+    updateStopDateTimeFromAsset: true, 
+    contentType: "video/mp4",
+    assetType: "media", 
+    uri: "https://s3.amazonaws.com/hold4fisher/Community+La+Biblioteca+Spanish+Rap+HD-j25tkxg5Vws.mp4"
+  
+  }) {
+    id
+    status
+    assets {
+      records {
+        id
+        type
+        contentType
+        signedUri
+      }
+    }
+  }
+}
+
+
+# # Create a Job with:
+# Speechmatics - Spanish - V2F: 
+# 71ab1ba9-e0b8-4215-b4f9-0fc1a1d2b44d
+
+# Veritone Speaker Separation Engine:
+# 35622f4d-cff0-4016-b63f-9d86ed60b707
+
+mutation runEngineJob {
+  createJob(
+    input: {
+      targetId: "431011721",
+      isReprocessJob:true <--Neccessary since we used createTDOWithAsset
+      tasks: [
+        {
+          engineId: "71ab1ba9-e0b8-4215-b4f9-0fc1a1d2b44d"
+        },
+        {
+          engineId: "35622f4d-cff0-4016-b63f-9d86ed60b707"
+        }
+      ]
+    }
+  )
+  {
+    id
+  }
+}
+
+# Poll for Job Status
+query pollStatus{
+  job(id: "${jobId}") {
+    id
+    status
+    tasks {
+      records {
+        id
+        status
+        output
+        target {
+          id
+        }
+      }
+    }
+    target {
+      id
+    }
+  }
+}
+
+# Once transcription Job is complete, Create Export Request
+mutation createExportRequest {
+  createExportRequest(input: {
+    includeMedia: false, 
+    tdoData: [{tdoId: "431011721"}
+    ], 
+    outputConfigurations: [
+      {  
+            engineId:"35622f4d-cff0-4016-b63f-9d86ed60b707",
+            formats:[  
+
+            ]
+         },
+      {
+      engineId: "71ab1ba9-e0b8-4215-b4f9-0fc1a1d2b44d"
+        formats: [
+          {extension: "vtt", 
+            options: {
+              newLineOnPunctuation: false
+            
+            
+            }}
+        
+        ]
+      }]}) {
+    id
+    status
+    organizationId
+    createdDateTime
+    modifiedDateTime
+    requestorId
+    assetUri
+  }
+}
+
+
+
+# Poll for Export 
+query exportRequest{
+			exportRequest(id: "2f61997d-26c2-48c2-a2dc-f34fa93eecb7") {
+				status
+				assetUri
+				requestorId
+			}
+		}
+    
 ```
