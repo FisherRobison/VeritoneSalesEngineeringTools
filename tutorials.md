@@ -20,7 +20,7 @@ First we will drag in a v2f in node, this will allow you to consume messages fro
 
 
 
-Next we will extract the following values from the event, TdoID, TaskID, JobID we will set these to flow level variables. 
+Next we will extract the following values from the event, tdoId, TaskID, JobID we will set these to flow level variables. 
 
 
 
@@ -98,3 +98,8 @@ const extractTopics = async (paragraph) => {
 
 
 Next we will drag in the HTTP Request node just set the Method to POST and leave the other fields blank, The function node before this set the uri and body properties for us. 
+
+
+Finally we will add a 200 Success Call Back or a 500 Service error callback
+
+<img width="800" alt="portfolio_view" src="https://s3.amazonaws.com/hold4fisher/callback.gif">
