@@ -887,7 +887,7 @@ mutation whitelistIDentifyEngines {
 mutation whitelistRedactEngines {
   addToEngineWhitelist(toAdd:{
     organizationId:    16750
-    engineIds:["e924437d-e9c1-401c-bc3f-d0fccad945ff","66a83b19-f691-46b2-ba85-443fc74602ed","6465796c-e8fe-4df3-a083-d6c64fb2c043","b9eca145-3bd6-4e62-83e3-82dbc5858af1","3f03e804-cab6-413f-805c-ec36b6e33f5b"]
+    engineIds:["01bd9b24-7d09-4fb1-abd5-7db28c1a4d89","3f03e804-cab6-413f-805c-ec36b6e33f5b","e924437d-e9c1-401c-bc3f-d0fccad945ff"]
   }){
     organizationId
   }
