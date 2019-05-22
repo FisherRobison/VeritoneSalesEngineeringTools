@@ -1155,6 +1155,17 @@ mutation createChildTask {
 }
 ```
 
+### Get Webhook Base URL (HTTP In) for Flow Process
+```
+# The "workflowRuntimeId" value below is "nr" appended with the org ID.
+query flowWebhookBaseUrl {
+  workflowRuntime(workflowRuntimeId: "nr16817") {
+    uri
+    authToken
+  }
+}
+```
+
 ## Real Time:
 
 ### Real Time Job Quick Start Guide
