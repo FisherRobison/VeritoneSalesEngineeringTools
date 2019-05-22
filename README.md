@@ -882,12 +882,33 @@ mutation whitelistIDentifyEngines {
 }
 ```
 
-### Whitelist Redact Engines
+### Whitelist Redact Engines (Environment Specific)
 ```
-mutation whitelistRedactEngines {
+# US-PROD:
+mutation whitelistRedactEnginesUs {
   addToEngineWhitelist(toAdd:{
-    organizationId:    16750
-    engineIds:["e924437d-e9c1-401c-bc3f-d0fccad945ff","66a83b19-f691-46b2-ba85-443fc74602ed","6465796c-e8fe-4df3-a083-d6c64fb2c043","b9eca145-3bd6-4e62-83e3-82dbc5858af1","3f03e804-cab6-413f-805c-ec36b6e33f5b"]
+    organizationId: 16750
+    engineIds: ["01bd9b24-7d09-4fb1-abd5-7db28c1a4d89","3f03e804-cab6-413f-805c-ec36b6e33f5b","e924437d-e9c1-401c-bc3f-d0fccad945ff"]
+  }){
+    organizationId
+  }
+}
+
+# UK-PROD:
+mutation whitelistRedactEnginesUk {
+  addToEngineWhitelist(toAdd:{
+    organizationId: 16750
+    engineIds: ["34b859a1-998d-419f-8d61-47f9f1d10046","01bd9b24-7d09-4fb1-abd5-7db28c1a4d89","3f03e804-cab6-413f-805c-ec36b6e33f5b","e924437d-e9c1-401c-bc3f-d0fccad945ff"]
+  }){
+    organizationId
+  }
+}
+
+# SLED2:
+mutation whitelistRedactEnginesSled2 {
+  addToEngineWhitelist(toAdd:{
+    organizationId: 16750
+    engineIds: ["ea0ada2a-7571-4aa5-9172-b5a7d989b041","9e611ad7-2d3b-48f6-a51b-0a1ba40feab4","54525249-da68-4dbf-b6fe-aea9a1aefd4d","34b859a1-998d-419f-8d61-47f9f1d10046","01bd9b24-7d09-4fb1-abd5-7db28c1a4d89","3f03e804-cab6-413f-805c-ec36b6e33f5b","e924437d-e9c1-401c-bc3f-d0fccad945ff"]
   }){
     organizationId
   }
@@ -955,6 +976,7 @@ query listEngines {
         id
         name
       }
+      isPublic
       fields {
         name
         type
