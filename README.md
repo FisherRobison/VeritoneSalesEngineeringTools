@@ -915,6 +915,18 @@ mutation whitelistRedactEnginesSled2 {
 }
 ```
 
+### Blacklist Non-Facebox Engines
+```
+mutation blacklistNonFaceboxEngines {
+  addToEngineBlacklist(toAdd:{
+    organizationId: 16817
+    engineIds:["b74d4058-90f6-453a-9636-5982e34abe0c","fa7e75da-5955-476a-b20c-28e286fdfd8e","3f115b93-97be-46f0-b0f2-7460db15ec34","bab908d5-1eb0-4b94-9b0c-5c4bb6a81d78"]
+  }){
+    organizationId
+  }
+}
+```
+
 ### Blacklist Deprecated Facebox Engines
 ```
 mutation blacklistDeprecatedFaceboxEngines {
