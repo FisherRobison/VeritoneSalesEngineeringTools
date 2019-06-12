@@ -128,12 +128,114 @@ mutation runIngestionJobDuration {
 }
 ```
 
+### Create S3 Source to Monitor Bucket
+```
+mutation createS3SourceBucket {
+  createSource(input: {
+    sourceTypeId: "11"
+    name: "S3"
+    details:
+    { 
+      accessKeyId: "accessKeyValue"
+      secretAccessKey: "secretAccessKeyValue"
+      buckets: ["bucket-name"]
+    }
+  })
+  {
+    id
+  }
+}
+```
+
+### Create S3 Source to Monitor Folder in Bucket
+```
+mutation createS3SourceFolder {
+  createSource(input: {
+    sourceTypeId: "11"
+    name: "S3"
+    details:
+    { 
+      accessKeyId: "accessKeyValue"
+      secretAccessKey: "secretAccessKeyValue"
+      directories: ["bucket-name/folder-name/"]
+    }
+  })
+  {
+    id
+  }
+}
+```
+
+### Create S3 Scheduled Recurring Ingestion Job
+```
+# Pass in "sourceId" values from an existing S3 source (see "Create S3 Source..." queries above).
+mutation createJobTemplate {
+  createJobTemplate(input: {
+     jobConfig: {
+      createTDOInput: {
+        sourceData: {
+          sourceId: "62648"
+        }
+      }
+    }
+    taskTemplates: [
+      # S3 Adapter:
+      {
+        engineId: "61b28b11-ca2e-4825-962e-4a9312f15aa0"
+        payload: {
+          sourceId: "62648"
+        }
+      },
+      # Optional engines to run:
+      {
+	engineId: "091d48a2-7cb1-446d-b4f3-9c472ebbd2bb"
+        payload: {
+          definitionId: "d328a482-e615-467b-93a1-8729de6661bb"
+        }
+      },
+      {
+	engineId: "54525249-da68-4dbf-b6fe-aea9a1aefd4d"
+      }      
+    ],
+    jobPipelineStage: 1  
+  }) {
+    id
+    jobPipelineId
+    taskTemplates {
+      records {
+        id
+        engineId
+      }
+    }
+  }
+}
+
+# Then pass in "jobPipelineId" value from previous mutation.  The "startDateTime" must be in GMT time zone.
+mutation createScheduledJob {
+  createScheduledJob (input: {
+    name: "S3 Ingestion"
+    runMode: Recurring
+    jobPipelineIds: ["ca403edb-a98b-4911-93e5-4a0c99e4a47d"]
+    startDateTime: "2019-05-30T19:20:00.000Z"
+    recurringScheduleParts: [
+      {
+        repeatIntervalUnit: Hours
+        repeatInterval: 1
+      }
+    ]  
+  })
+  {
+    id
+    jobPipelineIds
+  }
+}
+```
+
 ## Processing:
 
 ### Create Textraction Job with Translation 
 
 ```
-
 mutation newTDO {
   createTDOWithAsset(input:{  
     assetType: "media"  
