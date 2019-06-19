@@ -128,12 +128,114 @@ mutation runIngestionJobDuration {
 }
 ```
 
+### Create S3 Source to Monitor Bucket
+```
+mutation createS3SourceBucket {
+  createSource(input: {
+    sourceTypeId: "11"
+    name: "S3"
+    details:
+    { 
+      accessKeyId: "accessKeyValue"
+      secretAccessKey: "secretAccessKeyValue"
+      buckets: ["bucket-name"]
+    }
+  })
+  {
+    id
+  }
+}
+```
+
+### Create S3 Source to Monitor Folder in Bucket
+```
+mutation createS3SourceFolder {
+  createSource(input: {
+    sourceTypeId: "11"
+    name: "S3"
+    details:
+    { 
+      accessKeyId: "accessKeyValue"
+      secretAccessKey: "secretAccessKeyValue"
+      directories: ["bucket-name/folder-name/"]
+    }
+  })
+  {
+    id
+  }
+}
+```
+
+### Create S3 Scheduled Recurring Ingestion Job
+```
+# Pass in "sourceId" values from an existing S3 source (see "Create S3 Source..." queries above).
+mutation createJobTemplate {
+  createJobTemplate(input: {
+     jobConfig: {
+      createTDOInput: {
+        sourceData: {
+          sourceId: "62648"
+        }
+      }
+    }
+    taskTemplates: [
+      # S3 Adapter:
+      {
+        engineId: "61b28b11-ca2e-4825-962e-4a9312f15aa0"
+        payload: {
+          sourceId: "62648"
+        }
+      },
+      # Optional engines to run:
+      {
+	engineId: "091d48a2-7cb1-446d-b4f3-9c472ebbd2bb"
+        payload: {
+          definitionId: "d328a482-e615-467b-93a1-8729de6661bb"
+        }
+      },
+      {
+	engineId: "54525249-da68-4dbf-b6fe-aea9a1aefd4d"
+      }      
+    ],
+    jobPipelineStage: 1  
+  }) {
+    id
+    jobPipelineId
+    taskTemplates {
+      records {
+        id
+        engineId
+      }
+    }
+  }
+}
+
+# Then pass in "jobPipelineId" value from previous mutation.  The "startDateTime" must be in GMT time zone.
+mutation createScheduledJob {
+  createScheduledJob (input: {
+    name: "S3 Ingestion"
+    runMode: Recurring
+    jobPipelineIds: ["ca403edb-a98b-4911-93e5-4a0c99e4a47d"]
+    startDateTime: "2019-05-30T19:20:00.000Z"
+    recurringScheduleParts: [
+      {
+        repeatIntervalUnit: Hours
+        repeatInterval: 1
+      }
+    ]  
+  })
+  {
+    id
+    jobPipelineIds
+  }
+}
+```
+
 ## Processing:
 
 ### Create Textraction Job with Translation 
 
 ```
-
 mutation newTDO {
   createTDOWithAsset(input:{  
     assetType: "media"  
@@ -882,12 +984,45 @@ mutation whitelistIDentifyEngines {
 }
 ```
 
-### Whitelist Redact Engines
+### Whitelist Redact Engines (Environment Specific)
 ```
-mutation whitelistRedactEngines {
+# US-PROD:
+mutation whitelistRedactEnginesUs {
   addToEngineWhitelist(toAdd:{
-    organizationId:    16750
-    engineIds:["e924437d-e9c1-401c-bc3f-d0fccad945ff","66a83b19-f691-46b2-ba85-443fc74602ed","6465796c-e8fe-4df3-a083-d6c64fb2c043","b9eca145-3bd6-4e62-83e3-82dbc5858af1","3f03e804-cab6-413f-805c-ec36b6e33f5b"]
+    organizationId: 16750
+    engineIds: ["01bd9b24-7d09-4fb1-abd5-7db28c1a4d89","3f03e804-cab6-413f-805c-ec36b6e33f5b","e924437d-e9c1-401c-bc3f-d0fccad945ff"]
+  }){
+    organizationId
+  }
+}
+
+# UK-PROD:
+mutation whitelistRedactEnginesUk {
+  addToEngineWhitelist(toAdd:{
+    organizationId: 16750
+    engineIds: ["34b859a1-998d-419f-8d61-47f9f1d10046","01bd9b24-7d09-4fb1-abd5-7db28c1a4d89","3f03e804-cab6-413f-805c-ec36b6e33f5b","e924437d-e9c1-401c-bc3f-d0fccad945ff"]
+  }){
+    organizationId
+  }
+}
+
+# SLED2:
+mutation whitelistRedactEnginesSled2 {
+  addToEngineWhitelist(toAdd:{
+    organizationId: 16750
+    engineIds: ["ea0ada2a-7571-4aa5-9172-b5a7d989b041","9e611ad7-2d3b-48f6-a51b-0a1ba40feab4","54525249-da68-4dbf-b6fe-aea9a1aefd4d","34b859a1-998d-419f-8d61-47f9f1d10046","01bd9b24-7d09-4fb1-abd5-7db28c1a4d89","3f03e804-cab6-413f-805c-ec36b6e33f5b","e924437d-e9c1-401c-bc3f-d0fccad945ff"]
+  }){
+    organizationId
+  }
+}
+```
+
+### Blacklist Non-Facebox Engines
+```
+mutation blacklistNonFaceboxEngines {
+  addToEngineBlacklist(toAdd:{
+    organizationId: 16817
+    engineIds:["b74d4058-90f6-453a-9636-5982e34abe0c","fa7e75da-5955-476a-b20c-28e286fdfd8e","3f115b93-97be-46f0-b0f2-7460db15ec34","bab908d5-1eb0-4b94-9b0c-5c4bb6a81d78"]
   }){
     organizationId
   }
@@ -955,6 +1090,7 @@ query listEngines {
         id
         name
       }
+      isPublic
       fields {
         name
         type
@@ -1123,13 +1259,42 @@ query scheduledJob {
 
 # Then pass in the "jobTemplateId", "parentTaskId", and desired "engineId" into the following query to add the child engine as a task in the template.
 mutation createChildTask {
-	createTaskTemplate(input: {
-		engineId: "6fa160ef-9d3d-4c87-b955-eefaed611224"
-		parentTaskId: "19041402_JHSjcn8CMfd0rnb"
-		jobTemplateId: "19041402_JHSjcn8CMf"
-	}) {
-		id
-	}
+    createTaskTemplate(input: {
+        engineId: "6fa160ef-9d3d-4c87-b955-eefaed611224"
+        parentTaskId: "19041511_os0BKBZVwbWGgaY"
+        jobTemplateId: "19041511_os0BKBZVwb"
+        payload: {
+            definitionId: "516771a5-ce8d-47e0-a0e4-478b1ecbbec9"
+        }
+    }) {
+        id
+    }
+}
+```
+
+### List Engine Builds
+```
+query engineBuilds {
+  engine(id: "6fa160ef-9d3d-4c87-b955-eefaed611224") {
+    builds {
+      records {
+        id
+        name
+        status
+      }
+    }
+  }
+}
+```
+
+### Get Webhook Base URL (HTTP In) for Flow Process
+```
+# The "workflowRuntimeId" value below is "nr" appended with the org ID.
+query flowWebhookBaseUrl {
+  workflowRuntime(workflowRuntimeId: "nr16817") {
+    uri
+    authToken
+  }
 }
 ```
 
