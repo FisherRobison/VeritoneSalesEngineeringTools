@@ -767,7 +767,7 @@ query searchSDO {
 ## Folders:
 
 
-###  Query Identify TDOS by Case folder
+###  Query Identify TDOS by Case Folder
 
 ```
 query IDentifyTDOsbyCaseFolder{
