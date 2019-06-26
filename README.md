@@ -766,6 +766,24 @@ query searchSDO {
 
 ## Folders:
 
+
+###  Query Identify TDOS by Case folder
+
+```
+query IDentifyTDOsbyCaseFolder{
+  folder(id:"59c62b7d-4e3c-44a5-9b32-b330eb0fa041"){
+    name
+    childTDOs{
+      records{
+        id
+        name
+      }
+    }
+  }
+}
+```
+
+
 ### List Folders in CMS and Contained TDOs
 ```
 query listFolders {
