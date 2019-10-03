@@ -463,9 +463,7 @@ query getJobs {
             }
           }           
           payload
-          log {
-            uri
-          }
+          taskOutput
         }
       }
     }
