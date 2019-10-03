@@ -1314,6 +1314,27 @@ query flowWebhookBaseUrl {
 }
 ```
 
+### Bounce (Restart) Workflow Runtime in Org
+```
+# First, stop the Flow instance with this mutation, where "workflowRuntimeId" is "nr" appended with the org ID.
+mutation stopWorkflow {
+  stopWorkflowRuntime(workflowRuntimeId: "nr16817") {
+    uri
+    success
+    message
+  }
+}
+
+# Then start the Flow instance with this mutation:
+mutation startWorkflow {
+  startWorkflowRuntime(workflowRuntimeId: "nr16817", orgId: "16817") {
+    uri
+    message
+    success
+  }
+}
+```
+
 ## Real Time:
 
 ### Real Time Job Quick Start Guide
