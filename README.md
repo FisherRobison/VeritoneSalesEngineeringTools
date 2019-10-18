@@ -1057,6 +1057,20 @@ mutation blacklistDeprecatedFaceboxEngines {
 }
 ```
 
+### Suspend User Account
+```
+mutation suspendUser {
+  updateUserStatus(input: {
+    id: "4922caa3-dadb-41b7-bbd2-17961adc6f54"
+    status: suspended
+  }) {
+    id
+    name
+    status
+  }
+}
+```
+
 ## Miscellaneous:
 
 ### Get TDO Details (Filename, Tags, etc.)
