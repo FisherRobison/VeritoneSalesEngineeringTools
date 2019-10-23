@@ -1335,6 +1335,21 @@ mutation startWorkflow {
 }
 ```
 
+### Create High Priority Job in Irvine Cluster
+```
+mutation createHighPriorityJob {
+  createJob(input: {
+    targetId: "490455759", 
+    isReprocessJob: true, 
+    clusterId: "wpce02-useast1-irvine-cluster-key-clients", 
+    tasks: [
+      {engineId: "c0e55cde-340b-44d7-bb42-2e0d65e98141", payload: {keywords:"Keyword1, Keyword2"}}
+    ]}) {
+    id
+  }
+}
+```
+
 ## Real Time:
 
 ### Real Time Job Quick Start Guide
