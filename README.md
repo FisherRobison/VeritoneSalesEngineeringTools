@@ -765,7 +765,7 @@ query searchSDO {
 ## Folders:
 
 
-###  Query Identify TDOS by Case Folder
+###  Query Identify TDOs by Case Folder
 
 ```
 query IDentifyTDOsbyCaseFolder{
@@ -1360,6 +1360,78 @@ mutation createHighPriorityJob {
       {engineId: "c0e55cde-340b-44d7-bb42-2e0d65e98141", payload: {keywords:"Keyword1, Keyword2"}}
     ]}) {
     id
+  }
+}
+```
+
+### Upload File to Redact and Process Engines
+```
+# First, create an empty TDO with the appropriate name and tags.
+mutation createRedactTdo {
+  createTDO(input: {
+    name: "Body Cam.mp4",
+    details: {
+      tags: [
+        {
+            value: "in redaction",
+            redactionStatus: "Draft"
+        }
+      ],
+      veritoneFile: {
+      	filename: "Body Cam.mp4"
+      }
+    },
+    startDateTime: "2019-11-12T03:30:10.000Z",
+    stopDateTime: "2019-11-12T03:30:10.000Z",
+    addToIndex: true
+  }) {
+    id
+    name
+    status
+  }
+}
+
+# Next, upload the file through Webstream Adapter and call the Redact engines.
+mutation runRedactEngines {
+  createJob(input: {
+    targetId: "9457",
+    tasks: [{
+      engineId: "9e611ad7-2d3b-48f6-a51b-0a1ba40feab4",
+      payload: {
+        url: "https://veritone-aiware-430032233708-us-gov-prod-sled2-face.s3.us-gov-west-1.amazonaws.com/48/other/2019/10/2/_/Body%20Cam-1-17-837_bf75fdaf-cc05-4b32-840f-9d591a0b4da1.mp4?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAWIH7LETWKUZSAP7K%2F20191112%2Fus-gov-west-1%2Fs3%2Faws4_request&X-Amz-Date=20191112T011717Z&X-Amz-Expires=86400&X-Amz-Signature=adb91c62de8e21d4f26b2c3f3462a3643c0f02da47a7323554923e5c91601c7d&X-Amz-SignedHeaders=host"
+      }
+    },
+    {
+      engineId: "cc34d1cd-1369-4141-a60c-e51cda00d4ec"
+      payload: {
+         confidenceThreshold: 0.70,
+         videoType: "Bodycam",
+         stepSizeDetection: 3,
+         detectionRate: 3,
+         maxCosineDistance: 0.5
+      }      
+    },
+    {
+      engineId: "54525249-da68-4dbf-b6fe-aea9a1aefd4d"
+    }]
+  }) {
+    id
+  }
+}
+
+# Finally, create an SDO and reference the TDO so it is visible to Redact.
+mutation createRedactSdo {
+  createStructuredData(input: {
+    schemaId: "e8910a32-d1b7-4c44-b664-c1fdb499749f",
+    data: {
+      tdoId: "9457",
+      status: "Draft"
+    }
+  }) {
+    id
+    data
+    createdDateTime
+    modifiedDateTime
   }
 }
 ```
