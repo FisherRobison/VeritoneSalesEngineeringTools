@@ -15,6 +15,7 @@ If you would like to commit to this project please reach out to me on Slack.
 [Search](#search)<br>
 [Folders](#folders)<br>
 [Library](#library)<br>
+[Structured Data (SDOs)](#structured-data)<br>
 [Org Setup](#org-setup)<br>
 [Miscellaneous](#miscellaneous)<br>
 [Real Time](#real-time)
@@ -944,6 +945,184 @@ mutation updateEntityThumbnail {
   }
 }
 ```
+
+
+## Structured Data (SDOs):
+
+### Create Data Registry
+```
+mutation createDataRegistry {
+  createDataRegistry(input: {
+    name: "Vehicle"
+    description: "RMS metadata pertaining to a Vehicle record type."
+    source: "field deprecated"
+  }) {
+    id
+  }
+}
+```
+
+### List Data Registries
+```
+# Note: Partial matching supported for `name` value
+query listDataRegistries {
+  dataRegistries(name: "Vehicle") {
+    records {
+      id
+      name
+      description
+      source
+    }
+  }
+}
+```
+
+### Create Schema Draft (in Data Registry)
+```
+# Note: Use the `dataRegistryId` value from the `createDataRegistry` mutation
+mutation createSchemaDraft {
+  upsertSchemaDraft(input: {
+    dataRegistryId: "fa2714f0-f961-4dd9-a66d-2df874d19be7"
+    majorVersion: 1
+    schema: {
+      type: "object",
+      title: "Vehicle",
+      required: [
+        "caseId",
+        "vehicleId"
+      ],
+      properties: {
+        caseId: {
+          type: "string"
+        },
+        vehicleId: {
+          type: "string"
+        },
+        licensePlateNumber: {
+          type: "string"
+        },
+        stateOfIssue: {
+          type: "string"
+        },
+        vehicleYear: {
+          type: "string"
+        },
+        vehicleMake: {
+          type: "string"
+        },
+        vehicleModel: {
+          type: "string"
+        },
+        vehicleStyle: {
+          type: "string"
+        },
+        vehicleColor: {
+          type: "string"
+        }
+      },
+      description: "RMS metadata pertaining to a Vehicle record type."      
+    }
+  }) {
+    id
+    majorVersion
+    minorVersion
+    status
+    definition
+  }
+}
+```
+
+### Publish Schema Draft
+```
+# Note: Pass in the Schema ID for the `id` value
+mutation publishSchemaDraft {
+  updateSchemaState(input: {
+    id: "1b342627-e943-4293-920a-41221636e123"
+    status: published
+  }) {
+    id
+    majorVersion
+    minorVersion
+    status
+  }
+}
+```
+
+### List Schemas
+```
+# Note: Partial matching supported for `name` value
+query listSchemas {
+  schemas(name: "Vehicle") {
+    records {
+      id
+      createdDateTime
+      majorVersion
+      minorVersion
+      status
+      definition
+      dataRegistryId
+    }
+  }
+}
+```
+
+### Create TDO with SDO (Content Template)
+```
+# Note: Pass in the Schema ID for the `schemaId` value
+mutation createTdoWithSdo {
+  createTDO(
+    input: {
+      startDateTime: "2019-12-11T21:37:55.000Z"
+      stopDateTime: "2019-12-11T21:37:55.000Z"
+      name: "GO0005203850001"
+      details: {
+        name: "GO0005203850001"
+        veritoneFile: {
+          filename: "GO0005203850001"
+        }
+      }
+      contentTemplates: [
+        {
+          schemaId: "27ef1725-2844-43f4-ab45-8df1087b2b08"
+          data: {
+            caseId: "520385"
+            vehicleId: "412591"
+            licensePlateNumber: "6XDN071"
+            stateOfIssue: "CA"
+            vehicleYear: "2012"
+            vehicleMake: "Chevrolet"
+            vehicleModel: "Tahoe"
+            vehicleStyle: "CARRY-ALL (e.g. BLAZER,JEEP,BRONCO)"
+            vehicleColor: "WHI"
+          }
+        }
+      ]
+    }
+  )
+  {
+    id
+    status
+  }
+}
+```
+
+### Get SDOs (Content Templates) in TDO
+```
+query getTdoContentTemplates {
+  temporalDataObject(id: "490830814") {
+    id
+    name
+    assets(assetType: "content-template") {
+      records {
+        id
+        signedUri
+        jsondata
+      }
+    }
+  }
+}
+```
+
 
 ## Org Setup:
 
