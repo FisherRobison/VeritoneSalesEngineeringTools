@@ -15,7 +15,7 @@ If you would like to commit to this project please reach out to me on Slack.
 [Search](#search)<br>
 [Folders](#folders)<br>
 [Library](#library)<br>
-[Structured Data (SDOs)](#structured-data)<br>
+[Structured Data](#structured-data)<br>
 [Org Setup](#org-setup)<br>
 [Miscellaneous](#miscellaneous)<br>
 [Real Time](#real-time)
@@ -947,7 +947,7 @@ mutation updateEntityThumbnail {
 ```
 
 
-## Structured Data (SDOs):
+## Structured Data:
 
 ### Create Data Registry
 ```
