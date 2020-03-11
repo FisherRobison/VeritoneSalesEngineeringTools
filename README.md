@@ -1615,6 +1615,19 @@ mutation createRedactSdo {
 }
 ```
 
+### Get Redact Audit Log for TDO
+```
+query redactAuditLog {
+  auditEvents(application: "redact", terms: [{tdoId: "15680"}]){
+    records{
+      id
+      payload
+      application
+    }
+  }
+}
+```
+
 ## Real Time:
 
 ### Real Time Job Quick Start Guide
