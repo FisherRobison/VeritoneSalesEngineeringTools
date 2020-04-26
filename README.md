@@ -267,7 +267,7 @@ mutation createJob {
 #Amazon Translate USEAST V2F
 mutation createJob{
   createJob(input:{
-    targetId:"{{tdoId}}"
+    targetId:"410318594"
     isReprocessJob:true
     tasks:[
     {
