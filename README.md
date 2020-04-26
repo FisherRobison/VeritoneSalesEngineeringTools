@@ -267,17 +267,19 @@ mutation createJob {
 #Amazon Translate USEAST V2F
 mutation createJob{
   createJob(input:{
-    targetId:410318594
+    targetId:"{{tdoId}}"
     isReprocessJob:true
-    tasks:{
-      engineId:"c06ac5eb-3754-4055-b9fb-047b72660a0a",
-     payload: {
-              target: "ru",
-            }
-    
+    tasks:[
+    {
+      engineId:"c06ac5eb-3754-4055-b9fb-047b72660a0a"
+      payload: {
+                target: "ru"
+              }
     }
+  ]
   }){
     id
+    status
   }
 }
 ```
