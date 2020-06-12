@@ -1369,6 +1369,21 @@ mutation suspendUser {
 }
 ```
 
+### Delete Org
+```
+# Note: Replace `id` with the desired Org ID.
+mutation deleteOrg {
+  updateOrganization(input: {
+    id: "12345"
+    status: "deleted"
+  }) {
+    id
+    name
+    status
+  }
+}
+```
+
 ## Miscellaneous:
 
 ### Get TDO Details (Filename, Tags, etc.)
