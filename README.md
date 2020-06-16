@@ -19,7 +19,6 @@ If you would like to commit to this project please reach out to me on Slack.
 [Org Setup](#org-setup)<br>
 [Miscellaneous](#miscellaneous)<br>
 [Real Time](#real-time)<br>
-[Structured Data (SDO)](#sdo)
 
 
 ## Authentication:
