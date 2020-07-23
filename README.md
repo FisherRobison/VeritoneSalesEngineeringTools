@@ -447,119 +447,147 @@ mutation reprocessFaceDetection {
 
 ### Run V3 Engine Job (Transcription)
 ```
-mutation runV3Engine {
-     createJob(input: {
-        targetId: "952487931"
-        tasks: [
+mutation createTdoAndRunV3Job{
+  createJob(input: {
+    # Automatically create a new TDO using `target` instead of `targetId`
+    target: {
+      startDateTime: "2020-07-23T19:40:04.000Z"
+      stopDateTime: "2020-07-23T19:40:04.000Z"
+    }
+    # Default production cluster in US-PROD
+    clusterId: "rt-1cdc1d6d-a500-467a-bc46-d3c5bf3d6901"
+    # Engine tasks:
+    tasks: [
+       {
+         # Webstream Adapter (WSA)
+         engineId: "9e611ad7-2d3b-48f6-a51b-0a1ba40fe255"
+         payload: {
+            url: "https://s3.amazonaws.com/dev-chunk-cache-tmp/AC.mp4"
+         }
+        ioFolders: [
           {
-            engineId: "9e611ad7-2d3b-48f6-a51b-0a1ba40fe255"
-            payload: {
-              url: "https://inspirent.s3.amazonaws.com/16314/asset/2020/3/5/952487931/952487931_xrN57BT3bz.mp4?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAQMR5VATUHU3MEGOA%2F20200508%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20200508T212450Z&X-Amz-Expires=3600&X-Amz-Signature=e73f864cb1f39517676b4acc9716efd0fb615db0e14e6beb046ce1929f882808&X-Amz-SignedHeaders=host",
-            },
-            executionPreferences: {
-              priority: -5
-            },
-            ioFolders: [
-              {
-                referenceId: "wsaOutputFolder"
-                mode: stream
-                type: output
-              }
-            ]
-          },
-          {
-            engineId: "8bdb0e3b-ff28-4f6e-a3ba-887bd06e6440"
-            payload: {
-              ffmpegTemplate: "audio",
-              comment: "stream ingestor"
-              chunkOverlap: 3
-              customFFMPEGProperties:{
-                chunkSizeInSeconds: "60"
-                chunkOverlapDuration: "3s"
-                outputChunkDuration: "1m"
-                extractFramesPerSec: "1"
-              }
-            },
-            executionPreferences: {
-              parentCompleteBeforeStarting: true
-              priority: -5
-            }
-            ioFolders: [
-              {
-                referenceId: "chunkAudioInputFolder"
-                mode: stream
-                type: input
-              },
-              {
-                referenceId: "chunkAudioOutputFolder"
-                mode: chunk
-                type: output
-              }
-            ]
-          },
-          {
-            # transcription engine
-            engineId: "c0e55cde-340b-44d7-bb42-2e0d65e98255",
-            payload: {
-              targetId: "952487931",
-              url: "https://inspirent.s3.amazonaws.com/16314/asset/2020/3/5/952487931/952487931_xrN57BT3bz.mp4?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAQMR5VATUHU3MEGOA%2F20200508%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20200508T212450Z&X-Amz-Expires=3600&X-Amz-Signature=e73f864cb1f39517676b4acc9716efd0fb615db0e14e6beb046ce1929f882808&X-Amz-SignedHeaders=host"
-            },
-            executionPreferences: {
-              maxEngines: 10
-              parentCompleteBeforeStarting: true
-              priority: -5
-            },
-            ioFolders: [
-              {
-                referenceId: "transcriptionInputFolder"
-                mode: chunk
-                type: input
-              },
-              {
-                referenceId: "transcriptionOutputFolder"
-                mode: chunk
-                type: output
-              }
-            ]
-          },
-          {
-            engineId: "8eccf9cc-6b6d-4d7d-8cb3-7ebf4950c5f3"  ## output writer for SM
-            executionPreferences: {
-              parentCompleteBeforeStarting: true
-              priority: -10
-            },
-            ioFolders: [
-              {
-                referenceId: "owInputFolderFromTranscription"
-                mode: chunk
-                type: input
-              }
-            ]
-          }
-        ],
-        routes: [
-          {  ## WSA -> chunkAudio
-            parentIoFolderReferenceId: "wsaOutputFolder"
-            childIoFolderReferenceId: "chunkAudioInputFolder"
-            options: {}
-          },
-          {  ## chunkAudio --> Transcription
-            parentIoFolderReferenceId: "chunkAudioOutputFolder"
-            childIoFolderReferenceId: "transcriptionInputFolder"
-            options: {}
-          },
-          {  ## Transcription --> output writer
-            parentIoFolderReferenceId: "transcriptionOutputFolder"
-            childIoFolderReferenceId: "owInputFolderFromTranscription"
-            options: {}
+            referenceId: "wsaOutput"
+            mode: stream
+            type: output
           }
         ]
-      }) {
+      },
+      {
+        # Stream Ingestor 2 (SI2) Playback engine to store playback segments
+        engineId: "352556c7-de07-4d55-b33f-74b1cf237f25" 
+        ioFolders: [
+          {
+            referenceId: "playbackInput"
+            mode: stream
+            type: input
+          }
+        ]
+        executionPreferences: {
+      		 parentCompleteBeforeStarting: true
+        }
+      },
+      {
+        # SI2 Chunk engine to split media into chunks for processing
+        engineId: "8bdb0e3b-ff28-4f6e-a3ba-887bd06e6440"  
+        payload: {
+          ffmpegTemplate: "audio"
+          customFFMPEGProperties: {
+						chunkSizeInSeconds: "20"
+          }
+        }
+        ioFolders: [
+          {
+            referenceId: "chunkAudioInput"
+            mode: stream
+            type: input
+          },
+          {
+            referenceId: "chunkAudioOutput"
+            mode: chunk
+            type: output
+          }
+        ]
+       	executionPreferences: {
+      		 parentCompleteBeforeStarting: true
+        }
+      },
+      {
+        # Speechmatics English Transcription engine
+        engineId: "c0e55cde-340b-44d7-bb42-2e0d65e98255"
+        ioFolders: [
+        	{
+            referenceId: "transcriptionInput"
+            mode: chunk
+            type: input
+          },
+         	{
+            referenceId: "transcriptionOutput"
+            mode: chunk
+            type: output
+          }
+        ]
+      },
+      {
+        # Output Writer (OW) for collating VTN-Standard output from cognitive engine
+        engineId: "8eccf9cc-6b6d-4d7d-8cb3-7ebf4950c5f3"  
+        ioFolders: [
+          {
+            referenceId: "owInput"
+            mode: chunk
+            type: input
+          } 
+        ]
+      }
+    ]
+    
+    # Routes : A route connects a parent output folder to a child input folder
+    routes: [
+      {  # WSA --> SI2 Playback
+        parentIoFolderReferenceId: "wsaOutput"
+        childIoFolderReferenceId: "playbackInput"
+        options: {}
+      },
+      {  # WSA --> SI2 Chunk Audio
+        parentIoFolderReferenceId: "wsaOutput"
+        childIoFolderReferenceId: "chunkAudioInput"
+        options: {}
+      }
+      {  # SI2 Chunk Audio --> Transcription
+        parentIoFolderReferenceId: "chunkAudioOutput"
+        childIoFolderReferenceId: "transcriptionInput"
+        options: {}
+      }
+      {  # Transcription --> OW
+        parentIoFolderReferenceId: "transcriptionOutput"
+        childIoFolderReferenceId: "owInput"
+        options: {}
+      } 
+    ]
+  }) {
+    id
+    targetId
+    clusterId    
+    tasks {
+      records{
         id
-        targetId
+        engineId
+        payload
+        taskPayload
         status
+        output
+        ioFolders {
+          referenceId
+          type
+          mode
+        }
       }
     }
+    routes {
+      parentIoFolderReferenceId
+      childIoFolderReferenceId
+    }
+  }
+}
 ```
 
 ### Get Jobs for TDO
