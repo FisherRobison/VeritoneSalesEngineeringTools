@@ -445,9 +445,9 @@ mutation reprocessFaceDetection {
 }
 ```
 
-### Run V3 Engine Job (Transcription)
+### Run V3 Transcription Job
 ```
-mutation runV3EngineJob {
+mutation runV3TranscriptionJob {
   createJob(input: {
     # Use `target` to create a new TDO with the job, or use `targetId` to reference an existing TDO
     target: {
@@ -603,6 +603,49 @@ mutation runV3EngineJob {
       parentIoFolderReferenceId
       childIoFolderReferenceId
     }
+  }
+}
+```
+
+### Run V3 Translation Job
+```
+mutation runV3TranslationJob {
+  createJob(input: {
+    targetId: "1200851778"
+    clusterId: "rt-1cdc1d6d-a500-467a-bc46-d3c5bf3d6901"
+    tasks: [{
+      engineId: "a0ddde2a-3aba-4b4f-8177-1de05dd8982a"
+      payload: {
+        url: "https://ben-veritone-testing.s3.amazonaws.com/pwc-nl/Chinese/Chinese_traditional_financial_statement_fixed.txt?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIRQWTOLTAYN2LHEQ%2F20200924%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20200924T230303Z&X-Amz-Expires=604800&X-Amz-Signature=750f5fa5de63655f610d8234f3784f1305afd683bd4502023da810717957b608&X-Amz-SignedHeaders=host"
+      }
+      ioFolders: [{
+        referenceId: "translationOutput"
+        mode: chunk
+        type: output
+      }]
+      executionPreferences: {
+        priority: -5
+      }
+    },
+    {
+      engineId: "8eccf9cc-6b6d-4d7d-8cb3-7ebf4950c5f3"
+      ioFolders: [{
+        referenceId: "owInput"
+        mode: chunk
+        type: input
+      }]
+      executionPreferences: {
+        parentCompleteBeforeStarting: true
+        priority: -10
+      }
+    }]
+    routes: [{
+      parentIoFolderReferenceId: "translationOutput",
+      childIoFolderReferenceId: "owInput"
+    }]
+  }) {
+      id
+      targetId
   }
 }
 ```
