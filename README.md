@@ -445,9 +445,9 @@ mutation reprocessFaceDetection {
 }
 ```
 
-### Run V3 Engine Job (Transcription)
+### Run V3 Engine Job: Transcription
 ```
-mutation runV3EngineJob {
+mutation runV3TranscriptionJob {
   createJob(input: {
     # Use `target` to create a new TDO with the job, or use `targetId` to reference an existing TDO
     target: {
@@ -579,6 +579,348 @@ mutation runV3EngineJob {
         childIoFolderReferenceId: "owInput"
         options: {}
       } 
+    ]
+  }) {
+    id
+    targetId
+    clusterId    
+    tasks {
+      records{
+        id
+        engineId
+        payload
+        taskPayload
+        status
+        output
+        ioFolders {
+          referenceId
+          type
+          mode
+        }
+      }
+    }
+    routes {
+      parentIoFolderReferenceId
+      childIoFolderReferenceId
+    }
+  }
+}
+```
+
+### Run V3 Engine Job: Translation
+```
+mutation runV3TranslationJob {
+	createJob(input: {
+		targetId: "1200851778"
+		clusterId: "rt-1cdc1d6d-a500-467a-bc46-d3c5bf3d6901"
+		tasks: [
+      {
+				engineId: "95c910f6-4a26-4b66-96cb-488befa86466"
+        payload: {
+          url: "https://vt-maxagg-test.s3.amazonaws.com/media/spanish.txt"
+        }
+				ioFolders: [
+        	{
+						referenceId: "translationOutput"
+						mode: chunk
+						type: output
+					}]
+				executionPreferences: {
+          priority: -20
+				}
+			}
+      {
+        engineId: "8eccf9cc-6b6d-4d7d-8cb3-7ebf4950c5f3"  
+        ioFolders: [
+          {
+            referenceId: "owInput"
+            mode: chunk
+            type: input
+          } 
+        ]
+				executionPreferences: {
+					parentCompleteBeforeStarting: true
+          priority: -21
+				}        
+      }      
+		]
+		routes: [{
+        parentIoFolderReferenceId: "translationOutput",
+        childIoFolderReferenceId: "owInput"
+    	}    
+		]
+	}) {
+		id
+    targetId
+	}
+}
+```
+
+### Run V3 Engine Job: Object Detection
+```
+mutation runV3ObjectJob {
+  createJob(input: {
+    targetId: "1200851778"
+    clusterId: "rt-1cdc1d6d-a500-467a-bc46-d3c5bf3d6901"
+    tasks: [
+      {
+        engineId: "9e611ad7-2d3b-48f6-a51b-0a1ba40fe255"
+        payload: {
+          url: "https://ben-veritone-testing.s3.amazonaws.com/Body+Cam+(Retail)%2C+Short.mp4"
+        }
+        ioFolders: [
+          {
+            referenceId: "wsaOutput"
+            mode: stream
+            type: output
+          }
+        ]
+        executionPreferences: {
+          priority: -5
+        }
+      },
+      {
+        engineId: "352556c7-de07-4d55-b33f-74b1cf237f25" 
+        ioFolders: [
+          {
+            referenceId: "playbackInput"
+            mode: stream
+            type: input
+          }
+        ]
+        executionPreferences: {
+      	  parentCompleteBeforeStarting: true
+          priority: -5
+        }
+      },
+      {
+        engineId: "8bdb0e3b-ff28-4f6e-a3ba-887bd06e6440"  
+        payload: {
+          ffmpegTemplate: "frame"
+        }
+        ioFolders: [
+          {
+            referenceId: "chunkVideoInput"
+            mode: stream
+            type: input
+          },
+          {
+            referenceId: "chunkVideoOutput"
+            mode: chunk
+            type: output
+          }
+        ]
+       	executionPreferences: {
+      	  parentCompleteBeforeStarting: true
+          priority: -5
+        }
+      },
+      {
+        engineId: "d66f553d-3cef-4c5a-9b66-3e551cc48b4b"
+        ioFolders: [
+          {
+            referenceId: "tagboxInput"
+            mode: chunk
+            type: input
+          },
+          {
+            referenceId: "tagboxOutput"
+            mode: chunk
+            type: output
+          }
+        ]
+       	executionPreferences: {
+      	  maxEngines: 10
+          parentCompleteBeforeStarting: true
+          priority: -5
+        }        
+      },
+      {
+        engineId: "8eccf9cc-6b6d-4d7d-8cb3-7ebf4950c5f3"
+        ioFolders: [
+          {
+            referenceId: "owTagboxInput"
+            mode: chunk
+            type: input
+          }
+        ]
+       	executionPreferences: {
+          parentCompleteBeforeStarting: true
+          priority: -10
+        }         
+      }
+        ]
+       	executionPreferences: {
+      	  maxEngines: 10
+          parentCompleteBeforeStarting: true
+          priority: -5
+        }        
+      }
+    ]
+    routes: [
+      { 
+        parentIoFolderReferenceId: "wsaOutput"
+        childIoFolderReferenceId: "playbackInput"
+        options: {}
+      },
+      { 
+        parentIoFolderReferenceId: "wsaOutput"
+        childIoFolderReferenceId: "chunkVideoInput"
+        options: {}
+      },
+      { 
+        parentIoFolderReferenceId: "chunkVideoOutput"
+        childIoFolderReferenceId: "tagboxInput"
+        options: {}
+      },
+      { 
+        parentIoFolderReferenceId: "tagboxOutput"
+        childIoFolderReferenceId: "owTagboxInput"
+        options: {}
+      }    
+    ]
+  }) {
+    id
+    targetId
+    clusterId    
+    tasks {
+      records{
+        id
+        engineId
+        payload
+        taskPayload
+        status
+        output
+        ioFolders {
+          referenceId
+          type
+          mode
+        }
+      }
+    }
+    routes {
+      parentIoFolderReferenceId
+      childIoFolderReferenceId
+    }
+  }
+}
+```
+
+### Run V3 Engine Job: Text Recognition (OCR)
+```
+mutation runV3OcrJob {
+  createJob(input: {
+    targetId: "1200851778"
+    clusterId: "rt-1cdc1d6d-a500-467a-bc46-d3c5bf3d6901"
+    tasks: [
+      {
+        engineId: "9e611ad7-2d3b-48f6-a51b-0a1ba40fe255"
+        payload: {
+          url: "https://ben-veritone-testing.s3.amazonaws.com/Body+Cam+(Retail)%2C+Short.mp4"
+        }
+        ioFolders: [
+          {
+            referenceId: "wsaOutput"
+            mode: stream
+            type: output
+          }
+        ]
+        executionPreferences: {
+          priority: -5
+        }
+      },
+      {
+        engineId: "352556c7-de07-4d55-b33f-74b1cf237f25" 
+        ioFolders: [
+          {
+            referenceId: "playbackInput"
+            mode: stream
+            type: input
+          }
+        ]
+        executionPreferences: {
+      	  parentCompleteBeforeStarting: true
+          priority: -5
+        }
+      },
+      {
+        engineId: "8bdb0e3b-ff28-4f6e-a3ba-887bd06e6440"  
+        payload: {
+          ffmpegTemplate: "frame"
+        }
+        ioFolders: [
+          {
+            referenceId: "chunkVideoInput"
+            mode: stream
+            type: input
+          },
+          {
+            referenceId: "chunkVideoOutput"
+            mode: chunk
+            type: output
+          }
+        ]
+       	executionPreferences: {
+      	  parentCompleteBeforeStarting: true
+          priority: -5
+        }
+      },
+      {
+        engineId: "1e5b4e36-acbe-49f1-bebf-1d3a0edd6219"
+        ioFolders: [
+          {
+            referenceId: "googleOcrInput"
+            mode: chunk
+            type: input
+          },
+          {
+            referenceId: "googleOcrOutput"
+            mode: chunk
+            type: output
+          }
+        ]
+       	executionPreferences: {
+      	  maxEngines: 10
+          parentCompleteBeforeStarting: true
+          priority: -5
+        }        
+      },
+      {
+        engineId: "8eccf9cc-6b6d-4d7d-8cb3-7ebf4950c5f3"
+        ioFolders: [
+          {
+            referenceId: "owGoogleOcrInput"
+            mode: chunk
+            type: input
+          }
+        ]
+       	executionPreferences: {
+          parentCompleteBeforeStarting: true
+          priority: -10
+        }         
+      }      
+    ]
+    routes: [
+      { 
+        parentIoFolderReferenceId: "wsaOutput"
+        childIoFolderReferenceId: "playbackInput"
+        options: {}
+      },
+      { 
+        parentIoFolderReferenceId: "wsaOutput"
+        childIoFolderReferenceId: "chunkVideoInput"
+        options: {}
+      },
+      { 
+        parentIoFolderReferenceId: "chunkVideoOutput"
+        childIoFolderReferenceId: "googleOcrInput"
+        options: {}
+      },
+      { 
+        parentIoFolderReferenceId: "googleOcrOutput"
+        childIoFolderReferenceId: "owGoogleOcrInput"
+        options: {}
+      },      
     ]
   }) {
     id
