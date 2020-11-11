@@ -952,7 +952,7 @@ mutation runV3OcrJob {
 ### Get Jobs for TDO
 ```
 query getJobs {
-  jobs(targetId: "390287267") {
+  jobs(targetId: "1261237040") {
     records {
       id
       createdDateTime
@@ -971,8 +971,17 @@ query getJobs {
             }
           }           
           payload
+          executionPreferences {
+            parentCompleteBeforeStarting
+            priority
+            maxEngines
+          }
           taskOutput
         }
+      }
+      routes {
+        parentIoFolderReferenceId
+        childIoFolderReferenceId
       }
     }
   }
