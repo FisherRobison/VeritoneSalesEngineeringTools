@@ -748,13 +748,6 @@ mutation runV3ObjectJob {
           priority: -10
         }         
       }
-        ]
-       	executionPreferences: {
-      	  maxEngines: 10
-          parentCompleteBeforeStarting: true
-          priority: -5
-        }        
-      }
     ]
     routes: [
       { 
